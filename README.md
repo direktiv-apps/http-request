@@ -1,6 +1,8 @@
 
 # http-request 1.0.0
+
 Executes HTTP requests from Direktiv
+
 ---
 - #### Category: Network
 - #### Image: direktiv/http-request 
