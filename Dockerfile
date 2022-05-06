@@ -12,9 +12,9 @@ RUN cd src && \
     export CGO_LDFLAGS="-static -w -s" && \
     go build -tags osusergo,netgo -o /application cmd/http-request-server/main.go; 
 
-FROM ubuntu:21.04
+FROM gcr.io/distroless/static
 
-RUN apt-get update && apt-get install ca-certificates -y
+USER nonroot:nonroot
 
 COPY --from=build /application /bin/application
 
