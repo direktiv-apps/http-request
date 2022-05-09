@@ -77,7 +77,14 @@ method: post
          password: jq(.secrets.mypassword)
    ```
 
-### Responses
+### Request
+
+
+
+#### Request Attributes
+[PostParamsBody](#post-params-body)
+
+### Response
   Returns headers and content of the requested URL. If the response is JSON it will be returned as JSON. 
 If it is not JSON the content is returned as base64 encoded string.
 #### Reponse Types
