@@ -4,7 +4,7 @@
 Executes HTTP requests from Direktiv
 
 ---
-- #### Category: Network
+- #### Categories: network
 - #### Image: direktiv/http-request 
 - #### License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - #### Issue Tracking: https://github.com/direktiv-apps/http-request/issues
