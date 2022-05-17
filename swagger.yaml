@@ -8,7 +8,8 @@ info:
     maintainer: |-
       [direktiv.io](https://www.direktiv.io)
     url: https://github.com/direktiv-apps/http-request
-    category: Network
+    categories: 
+    - network
     issues: https://github.com/direktiv-apps/http-request/issues
     license: |-
       [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
