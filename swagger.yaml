@@ -4,7 +4,7 @@ info:
   title: http-request
   version: "1.0"
   x-direktiv-meta:
-    container: direktiv/http-request
+    container: gcr.io/direktiv/apps/http-request
     maintainer: |-
       [direktiv.io](https://www.direktiv.io)
     url: https://github.com/direktiv-apps/http-request
@@ -41,7 +41,7 @@ paths:
       x-direktiv-function: |-
         functions:
           - id: request
-            image: direktiv/http-request
+            image: gcr.io/direktiv/apps/http-request:1.0
             type: knative-workflow
       x-direktiv-examples:
         - title: Basic
@@ -51,11 +51,16 @@ paths:
                  action:
                    function: request
                  input: 
-                 url: "http://www.direktiv.io"
+                  url: "http://www.direktiv.io"
         - title: Post Request
           content: |-
-            url: http://www.direktiv.io
-            method: post
+             - id: req
+                 type: action
+                 action:
+                   function: request
+                 input: 
+                  url: http://www.direktiv.io
+                  method: post
         - title: Request with File
           content: |-
             - id: set

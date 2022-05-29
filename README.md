@@ -1,11 +1,11 @@
 
-# http-request 1.0.0
+# http-request 1.0
 
 Executes HTTP requests from Direktiv
 
 ---
 - #### Categories: network
-- #### Image: direktiv/http-request 
+- #### Image: gcr.io/direktiv/apps/http-request 
 - #### License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - #### Issue Tracking: https://github.com/direktiv-apps/http-request/issues
 - #### URL: https://github.com/direktiv-apps/http-request
@@ -23,7 +23,7 @@ case of self-signed certificates.
   ```yaml
   functions:
   - id: request
-    image: direktiv/http-request
+    image: gcr.io/direktiv/apps/http-request:1.0
     type: knative-workflow
   ```
    #### Basic
@@ -33,12 +33,17 @@ case of self-signed certificates.
      action:
        function: request
      input: 
-     url: "http://www.direktiv.io"
+      url: "http://www.direktiv.io"
    ```
    #### Post Request
    ```yaml
-   url: http://www.direktiv.io
-method: post
+   - id: req
+    type: action
+    action:
+      function: request
+    input: 
+     url: http://www.direktiv.io
+     method: post
    ```
    #### Request with File
    ```yaml
