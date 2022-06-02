@@ -35,12 +35,19 @@ const (
 
 type accParams struct {
 	PostParams
-	Commands []interface{}
+	Commands    []interface{}
+	DirektivDir string
 }
 
 type accParamsTemplate struct {
 	PostBody
-	Commands []interface{}
+	Commands    []interface{}
+	DirektivDir string
+}
+
+type ctxInfo struct {
+	cf        context.CancelFunc
+	cancelled bool
 }
 
 func PostDirektivHandle(params PostParams) middleware.Responder {
@@ -48,8 +55,9 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	resp := &PostOKBody{}
 
 	var (
-		err error
-		ret interface{}
+		err  error
+		ret  interface{}
+		cont bool
 	)
 
 	ri, err := apps.RequestinfoFromRequest(params.HTTPRequest)
@@ -58,8 +66,13 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	}
 
 	ctx, cancel := context.WithCancel(params.HTTPRequest.Context())
-	sm.Store(*params.DirektivActionID, cancel)
-	defer sm.Delete(params.DirektivActionID)
+
+	sm.Store(*params.DirektivActionID, &ctxInfo{
+		cancel,
+		false,
+	})
+
+	defer sm.Delete(*params.DirektivActionID)
 
 	var responses []interface{}
 
@@ -67,13 +80,29 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	accParams := accParams{
 		params,
 		nil,
+		ri.Dir(),
 	}
 
 	ret, err = runCommand0(ctx, accParams, ri)
 	responses = append(responses, ret)
 
-	if err != nil && true {
+	// if foreach returns an error there is no continue
+	cont = convertTemplateToBool("<no value>", accParams, true)
+
+	if err != nil && !cont {
+
 		errName := cmdErr
+
+		// if the delete function added the cancel tag
+		ci, ok := sm.Load(*params.DirektivActionID)
+		if ok {
+			cinfo, ok := ci.(*ctxInfo)
+			if ok && cinfo.cancelled {
+				errName = "direktiv.actionCancelled"
+				err = fmt.Errorf("action got cancel request")
+			}
+		}
+
 		return generateError(errName, err)
 	}
 
@@ -91,12 +120,11 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	responseBytes := []byte(s)
 
 	// validate
-
 	resp.UnmarshalBinary(responseBytes)
 	err = resp.Validate(strfmt.Default)
 
 	if err != nil {
-		fmt.Printf("error parsing output template: %+v\n", err)
+		fmt.Printf("error parsing output object: %+v\n", err)
 		return generateError(outErr, err)
 	}
 
@@ -112,6 +140,7 @@ func runCommand0(ctx context.Context,
 	at := accParamsTemplate{
 		params.Body,
 		params.Commands,
+		params.DirektivDir,
 	}
 
 	ir := make(map[string]interface{})

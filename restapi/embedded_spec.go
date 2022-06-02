@@ -31,10 +31,12 @@ func init() {
   "info": {
     "description": "Executes HTTP requests from Direktiv",
     "title": "http-request",
-    "version": "1.0.0",
+    "version": "1.0",
     "x-direktiv-meta": {
-      "category": "Network",
-      "container": "direktiv/http-request",
+      "categories": [
+        "network"
+      ],
+      "container": "gcr.io/direktiv/apps/http-request",
       "issues": "https://github.com/direktiv-apps/http-request/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
       "long-description": "This function executes HTTP requests. Query parameters, data payloads and custom headers are supported. The payload can be a string, \nbase64 or a file. It can be configured to return errors if the response status is not 2xx and it can be configured to ignore SSL errors in\ncase of self-signed certificates. ",
@@ -201,7 +203,16 @@ func init() {
               }
             },
             "examples": {
-              "greeting": "Hello YourName"
+              "greeting": {
+                "code": 200,
+                "headers": {
+                  "Content-Type": [
+                    "text/plain; charset=UTF-8"
+                  ]
+                },
+                "status": "200 OK",
+                "success": true
+              }
             }
           },
           "default": {
@@ -245,11 +256,11 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: req\n     type: action\n     action:\n       function: request\n     input: \n     url: \"http://www.direktiv.io\"",
+            "content": "- id: req\n     type: action\n     action:\n       function: request\n     input: \n      url: \"http://www.direktiv.io\"",
             "title": "Basic"
           },
           {
-            "content": "url: http://www.direktiv.io\nmethod: post",
+            "content": "- id: req\n    type: action\n    action:\n      function: request\n    input: \n     url: http://www.direktiv.io\n     method: post",
             "title": "Post Request"
           },
           {
@@ -261,7 +272,7 @@ func init() {
             "title": "Request with Basic Authentication"
           }
         ],
-        "x-direktiv-function": "functions:\n  - id: request\n    image: direktiv/http-request\n    type: knative-workflow"
+        "x-direktiv-function": "functions:\n  - id: request\n    image: gcr.io/direktiv/apps/http-request:1.0\n    type: knative-workflow"
       },
       "delete": {
         "parameters": [
@@ -324,10 +335,12 @@ func init() {
   "info": {
     "description": "Executes HTTP requests from Direktiv",
     "title": "http-request",
-    "version": "1.0.0",
+    "version": "1.0",
     "x-direktiv-meta": {
-      "category": "Network",
-      "container": "direktiv/http-request",
+      "categories": [
+        "network"
+      ],
+      "container": "gcr.io/direktiv/apps/http-request",
       "issues": "https://github.com/direktiv-apps/http-request/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
       "long-description": "This function executes HTTP requests. Query parameters, data payloads and custom headers are supported. The payload can be a string, \nbase64 or a file. It can be configured to return errors if the response status is not 2xx and it can be configured to ignore SSL errors in\ncase of self-signed certificates. ",
@@ -494,7 +507,16 @@ func init() {
               }
             },
             "examples": {
-              "greeting": "Hello YourName"
+              "greeting": {
+                "code": 200,
+                "headers": {
+                  "Content-Type": [
+                    "text/plain; charset=UTF-8"
+                  ]
+                },
+                "status": "200 OK",
+                "success": true
+              }
             }
           },
           "default": {
@@ -538,11 +560,11 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: req\n     type: action\n     action:\n       function: request\n     input: \n     url: \"http://www.direktiv.io\"",
+            "content": "- id: req\n     type: action\n     action:\n       function: request\n     input: \n      url: \"http://www.direktiv.io\"",
             "title": "Basic"
           },
           {
-            "content": "url: http://www.direktiv.io\nmethod: post",
+            "content": "- id: req\n    type: action\n    action:\n      function: request\n    input: \n     url: http://www.direktiv.io\n     method: post",
             "title": "Post Request"
           },
           {
@@ -554,7 +576,7 @@ func init() {
             "title": "Request with Basic Authentication"
           }
         ],
-        "x-direktiv-function": "functions:\n  - id: request\n    image: direktiv/http-request\n    type: knative-workflow"
+        "x-direktiv-function": "functions:\n  - id: request\n    image: gcr.io/direktiv/apps/http-request:1.0\n    type: knative-workflow"
       },
       "delete": {
         "parameters": [
