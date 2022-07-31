@@ -18,7 +18,7 @@ import (
 // PostParamsBodyContent Defines the payload of the request. The `kind` value can have three different values:
 //  - string: Plain string payload, e.g. JSON
 //  - base64: Will be "converted" to binary and attached
-//  - file: File payload
+//  - file: File payload, e.g. instance or workflow variables
 // Example: {"kind":"string","value":"This is the payload"}
 //
 // swagger:model postParamsBodyContent

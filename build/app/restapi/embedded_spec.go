@@ -72,7 +72,7 @@ func init() {
               ],
               "properties": {
                 "content": {
-                  "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload",
+                  "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables",
                   "type": "object",
                   "properties": {
                     "kind": {
@@ -225,12 +225,20 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      commands:\n      - command: Example of running http-request",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - yes: no",
             "title": "Basic"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      files:\n      - name: hello.txt\n        data: Hello World\n        mode: '0755'\n      commands:\n      - command: Example of running http-request",
-            "title": "Advanced"
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      headers:\n      - header1: value1\n      - header2: value2",
+            "title": "POST Request"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      content:\n        kind: string\n        value: 'This is the payload'",
+            "title": "POST Request with file"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io/doesnotexist'\n      error200: true\n  catch:\n  - error: \"*\"                  ",
+            "title": "Treat 404 as error"
           }
         ],
         "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/apps/http-request:1.0\n  type: knative-workflow"
@@ -395,12 +403,20 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      commands:\n      - command: Example of running http-request",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - yes: no",
             "title": "Basic"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      files:\n      - name: hello.txt\n        data: Hello World\n        mode: '0755'\n      commands:\n      - command: Example of running http-request",
-            "title": "Advanced"
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      headers:\n      - header1: value1\n      - header2: value2",
+            "title": "POST Request"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      content:\n        kind: string\n        value: 'This is the payload'",
+            "title": "POST Request with file"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io/doesnotexist'\n      error200: true\n  catch:\n  - error: \"*\"                  ",
+            "title": "Treat 404 as error"
           }
         ],
         "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/apps/http-request:1.0\n  type: knative-workflow"
@@ -529,7 +545,7 @@ func init() {
       "x-go-gen-location": "operations"
     },
     "postParamsBodyContent": {
-      "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload",
+      "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables",
       "type": "object",
       "properties": {
         "kind": {

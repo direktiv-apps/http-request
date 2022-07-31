@@ -9,17 +9,40 @@ states:
   action:
     function: http-request
     input:
-      commands:
-      - command: Example of running http-request
+      debug: true
+      query:
+      - hello: world
+      - true: false
+      url: https://www.direktiv.io
   transition: state1
 - id: state1
   type: action
   action:
     function: http-request
     input:
-      commands:
-      - command: Example of running http-request
-      files:
-      - data: Hello World
-        mode: "0755"
-        name: hello.txt
+      headers:
+      - header1: value1
+      - header2: value2
+      method: post
+      url: https://www.direktiv.io
+  transition: state2
+- id: state2
+  type: action
+  action:
+    function: http-request
+    input:
+      content:
+        kind: string
+        value: This is the payload
+      method: post
+      url: https://www.direktiv.io
+  transition: state3
+- id: state3
+  type: action
+  catch:
+  - error: '*'
+  action:
+    function: http-request
+    input:
+      error200: true
+      url: https://www.direktiv.io/doesnotexist

@@ -118,7 +118,7 @@ paths:
                    Defines the payload of the request. The `kind` value can have three different values: 
                     - string: Plain string payload, e.g. JSON
                     - base64: Will be "converted" to binary and attached
-                    - file: File payload
+                    - file: File payload, e.g. instance or workflow variables
       # direktiv code generation is configured here
       x-direktiv-function: |-
         functions:
@@ -134,21 +134,46 @@ paths:
               action:
                 function: http-request
                 input: 
-                  commands:
-                  - command: Example of running http-request
-        - title: Advanced
+                  debug: true
+                  url: 'https://www.direktiv.io'
+                  query:
+                  - hello: world
+                  - yes: no
+        - title: POST Request
           content: |-
             - id: http-request
               type: action
               action:
                 function: http-request
                 input: 
-                  files:
-                  - name: hello.txt
-                    data: Hello World
-                    mode: '0755'
-                  commands:
-                  - command: Example of running http-request
+                  url: 'https://www.direktiv.io'
+                  method: post
+                  headers:
+                  - header1: value1
+                  - header2: value2
+        - title: POST Request with file
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io'
+                  method: post
+                  content:
+                    kind: string
+                    value: 'This is the payload'
+        - title: Treat 404 as error
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io/doesnotexist'
+                  error200: true
+              catch:
+              - error: "*"                  
       x-direktiv:  
         cmds:
         - action: http
