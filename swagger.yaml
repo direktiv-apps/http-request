@@ -199,12 +199,13 @@ paths:
         200:
           description: List of executed commands.
           examples:
-            code: 200
-            headers:
-            - Access-Control-Allow-Origin: "*"
-            - Content-Type: text/html
-            result: KXx8T2JqZWN0LmR...
-            success: true 
+            plain:
+              code: 200
+              headers:
+                Access-Control-Allow-Origin: "*"
+                Content-Type: text/html
+              result: KXx8T2JqZWN0LmR...
+              success: true 
           schema:
             type: object
         default:
