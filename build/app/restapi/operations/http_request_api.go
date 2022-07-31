@@ -51,7 +51,7 @@ func NewHTTPRequestAPI(spec *loads.Document) *HTTPRequestAPI {
 	}
 }
 
-/*HTTPRequestAPI Executes HTTP requests from Direktiv */
+/*HTTPRequestAPI Run http-request in Direktiv */
 type HTTPRequestAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context

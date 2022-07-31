@@ -20,14 +20,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/codeclysm/extract/v3"
-
 	"github.com/go-openapi/runtime/flagext"
 	"github.com/go-openapi/swag"
 	flags "github.com/jessevdk/go-flags"
 	"golang.org/x/net/netutil"
 
-	"http-request/restapi/operations"
+	"app/restapi/operations"
 )
 
 const (
@@ -59,6 +57,9 @@ func (s *Server) ConfigureAPI() {
 	if s.api != nil {
 		s.handler = configureAPI(s.api)
 	}
+
+	s.ReadTimeout = 86400 * time.Second
+	s.WriteTimeout = 86400 * time.Second
 }
 
 // ConfigureFlags configures the additional flags defined by the handlers. Needs to be called before the parser.Parse
@@ -152,37 +153,8 @@ func (s *Server) hasScheme(scheme string) bool {
 	return false
 }
 
-type UploadHandler struct {
-}
-
-func (uh *UploadHandler) ServeHTTP(wr http.ResponseWriter, r *http.Request) {
-	log.Println("handle upload")
-
-	err := extract.Gz(context.Background(), r.Body, "/tmp", nil)
-	if err != nil {
-		log.Fatalf("can not untar upload: %v", err)
-	}
-}
-
-func uploadServer() {
-
-	t := os.Getenv("DIREKTIV_TEST")
-
-	if len(t) > 0 {
-		log.Println("starting test upload server")
-		s := &http.Server{
-			Addr:    ":9292",
-			Handler: &UploadHandler{},
-		}
-		log.Fatal(s.ListenAndServe())
-	}
-
-}
-
 // Serve the api
 func (s *Server) Serve() (err error) {
-
-	go uploadServer()
 
 	if !s.hasListeners {
 		if err = s.Listen(); err != nil {

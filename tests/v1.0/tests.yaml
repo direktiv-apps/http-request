@@ -1,0 +1,25 @@
+url: ""
+functions:
+- type: knative-workflow
+  id: http-request
+  image: gcr.io/direktiv/apps/http-request:test
+states:
+- id: state0
+  type: action
+  action:
+    function: http-request
+    input:
+      commands:
+      - command: Example of running http-request
+  transition: state1
+- id: state1
+  type: action
+  action:
+    function: http-request
+    input:
+      commands:
+      - command: Example of running http-request
+      files:
+      - data: Hello World
+        mode: "0755"
+        name: hello.txt

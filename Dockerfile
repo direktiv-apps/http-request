@@ -1,24 +1,27 @@
-FROM golang:1.18-buster as build
+FROM golang:1.18.2-alpine as build
 
-COPY go.mod src/go.mod
-COPY go.sum src/go.sum
-RUN cd src/ && go mod download
+WORKDIR /src
 
-COPY cmd src/cmd/
-COPY models src/models/
-COPY restapi src/restapi/
+COPY build/app/go.mod go.mod
+COPY build/app/go.sum go.sum
 
-RUN cd src && \
-    export CGO_LDFLAGS="-static -w -s" && \
-    go build -tags osusergo,netgo -o /application cmd/http-request-server/main.go; 
+RUN go mod download
 
-FROM gcr.io/distroless/static
+COPY build/app/cmd cmd/
+COPY build/app/models models/
+COPY build/app/restapi restapi/
 
-USER nonroot:nonroot
+ENV CGO_LDFLAGS "-static -w -s"
 
+RUN go build -tags osusergo,netgo -o /application cmd/http-request-server/main.go; 
+
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install ca-certificates -y
+
+# DON'T CHANGE BELOW 
 COPY --from=build /application /bin/application
 
 EXPOSE 8080
 
-CMD ["/bin/application", "--port=8080", "--host=0.0.0.0"]
-
+CMD ["/bin/application", "--port=8080", "--host=0.0.0.0", "--write-timeout=0"]

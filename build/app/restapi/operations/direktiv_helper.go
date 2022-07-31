@@ -55,8 +55,6 @@ func deref(dd interface{}) interface{} {
 }
 
 func templateString(tmplIn string, data interface{}) (string, error) {
-	fmt.Printf("template to use: %+v\n", tmplIn)
-	fmt.Printf("data to use: %+v\n", data)
 
 	tmpl, err := template.New("base").Funcs(sprig.FuncMap()).Funcs(template.FuncMap{
 		"fileExists": fileExists,
@@ -64,17 +62,14 @@ func templateString(tmplIn string, data interface{}) (string, error) {
 		"file64":     file64,
 	}).Parse(tmplIn)
 	if err != nil {
-		fmt.Printf("template failed: %+v\n", err)
 		return "", err
 	}
 
 	var b bytes.Buffer
 	err = tmpl.Execute(&b, data)
 	if err != nil {
-		fmt.Printf("template failed: %+v\n", err)
 		return "", err
 	}
-	fmt.Printf("template output: %+v\n", html.UnescapeString(b.String()))
 
 	v := b.String()
 	if v == "<no value>" {
@@ -103,7 +98,6 @@ func convertTemplateToBool(template string, data interface{}, defaultValue bool)
 
 func runCmd(ctx context.Context, cmdString string, envs []string,
 	output string, silent, print bool, ri *apps.RequestInfo) (map[string]interface{}, error) {
-	fmt.Printf("evironment vars: %+v\n", envs)
 
 	ir := make(map[string]interface{})
 	ir[successKey] = false
@@ -142,7 +136,10 @@ func runCmd(ctx context.Context, cmdString string, envs []string,
 	cmd.Stdout = mwStdout
 	cmd.Stderr = mwStdErr
 	cmd.Dir = ri.Dir()
-	cmd.Env = append(os.Environ(), envs...)
+
+	// change HOME
+	curEnvs := append(os.Environ(), fmt.Sprintf("HOME=%s", ri.Dir()))
+	cmd.Env = append(curEnvs, envs...)
 
 	if print {
 		ri.Logger().Infof("running command %v", cmd)
@@ -166,7 +163,6 @@ func runCmd(ctx context.Context, cmdString string, envs []string,
 	// output check
 	b := o.Bytes()
 	if output != "" {
-		fmt.Printf("output set to: %s\n", output)
 		b, err = os.ReadFile(output)
 		if err != nil {
 			ir[resultKey] = err.Error()
@@ -185,9 +181,9 @@ func runCmd(ctx context.Context, cmdString string, envs []string,
 
 }
 
-func doHttpRequest(method, u, user, pwd string,
-	headers map[string]string,
-	insecure, errNo200 bool, data []byte) (map[string]interface{}, error) {
+func doHttpRequest(debug bool, method, u, user, pwd string,
+	headers map[string]string, insecure, errNo200 bool,
+	data []byte) (map[string]interface{}, error) {
 
 	ir := make(map[string]interface{})
 	ir[successKey] = false
@@ -211,6 +207,7 @@ func doHttpRequest(method, u, user, pwd string,
 		ir[resultKey] = err.Error()
 		return ir, err
 	}
+	req.Close = true
 
 	for k, v := range headers {
 		req.Header.Add(k, v)
@@ -231,6 +228,15 @@ func doHttpRequest(method, u, user, pwd string,
 	client := &http.Client{
 		Jar:       jar,
 		Transport: cr,
+	}
+
+	if debug {
+		fmt.Printf("method: %s, insecure: %v\n", method, insecure)
+		fmt.Printf("url: %s\n", req.URL.String())
+		fmt.Println("Headers:")
+		for k, v := range headers {
+			fmt.Printf("%v = %v\n", k, v)
+		}
 	}
 
 	resp, err := client.Do(req)

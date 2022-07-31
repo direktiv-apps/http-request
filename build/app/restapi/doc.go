@@ -2,7 +2,7 @@
 
 // Package restapi http-request
 //
-//  Executes HTTP requests from Direktiv
+//  Run http-request in Direktiv
 //  Schemes:
 //    http
 //  Host: localhost

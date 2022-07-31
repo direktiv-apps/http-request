@@ -1,22 +1,20 @@
 swagger: "2.0"
 info:
-  description: Executes HTTP requests from Direktiv
+  description: Run http-request in Direktiv
   title: http-request
   version: "1.0"
   x-direktiv-meta:
     container: gcr.io/direktiv/apps/http-request
     maintainer: |-
-      [direktiv.io](https://www.direktiv.io)
-    url: https://github.com/direktiv-apps/http-request
-    categories: 
-    - network
+      [direktiv.io](https://www.direktiv.io) 
     issues: https://github.com/direktiv-apps/http-request/issues
+    url: https://github.com/direktiv-apps/http-request  
+    categories:
+    - unknown
     license: |-
       [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
-    long-description: |-
-      This function executes HTTP requests. Query parameters, data payloads and custom headers are supported. The payload can be a string, 
-      base64 or a file. It can be configured to return errors if the response status is not 2xx and it can be configured to ignore SSL errors in
-      case of self-signed certificates. 
+    long-description: >-
+      Run http-request in Direktiv as a function
 consumes:
 - application/json
 produces:
@@ -38,73 +36,18 @@ paths:
       responses:
         200:
     post:
-      x-direktiv-function: |-
-        functions:
-          - id: request
-            image: gcr.io/direktiv/apps/http-request:1.0
-            type: knative-workflow
-      x-direktiv-examples:
-        - title: Basic
-          content: |-
-            - id: req
-                 type: action
-                 action:
-                   function: request
-                 input: 
-                  url: "http://www.direktiv.io"
-        - title: Post Request
-          content: |-
-             - id: req
-                 type: action
-                 action:
-                   function: request
-                 input: 
-                  url: http://www.direktiv.io
-                  method: post
-        - title: Request with File
-          content: |-
-            - id: set
-                 type: setter
-                 variables:
-                 - key: myfile
-                   scope: workflow
-                   mimeType: text/plain
-                   value: This Is The Data
-                 transition: send
-            - id: send 
-                 type: action
-                 action:
-                   function: post
-                   files:
-                     - key: myfile
-                       scope: workflow
-                       as: myfile.txt
-                   input: 
-                     url: "https://webhook.site"
-                     content: 
-                       kind: file
-                       value: myfile.txt
-        - title: Request with Basic Authentication
-          content: |-
-            - id: getter 
-                 type: action
-                 action:
-                   secrets: ["mypassword"]
-                   function: get
-                   input: 
-                     url: "https://webhook.site
-                     user: admin
-                     password: jq(.secrets.mypassword)
       parameters:
         - name: Direktiv-ActionID
           in: header
           type: string
+          default: development
           description: |
             direktiv action id is an UUID. 
             For development it can be set to 'development'
         - name: Direktiv-TempDir
           in: header
           type: string
+          default: /tmp
           description: |
             direktiv temp dir is the working directory for that request
             For development it can be set to e.g. '/tmp'
@@ -112,8 +55,7 @@ paths:
           in: body
           schema:
             type: object
-            required:
-              - url
+            required: ["url"]
             properties:
               url:
                 type: string
@@ -154,6 +96,10 @@ paths:
                 type: boolean
                 example: true
                 description: If set to `true` responses with status above 299 will be treated as errors.
+              debug:
+                type: boolean
+                example: true
+                description: Prints the full URL and headers to logs.
               content:
                 type: object
                 properties:
@@ -174,8 +120,36 @@ paths:
                     - base64: Will be "converted" to binary and attached
                     - file: File payload
       # direktiv code generation is configured here
+      x-direktiv-function: |-
+        functions:
+        - id: http-request
+          image: gcr.io/direktiv/apps/http-request:1.0
+          type: knative-workflow
+      x-direktiv-examples:
+        # ADD MORE EXAMPLES HERE
+        - title: Basic
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  commands:
+                  - command: Example of running http-request
+        - title: Advanced
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  files:
+                  - name: hello.txt
+                    data: Hello World
+                    mode: '0755'
+                  commands:
+                  - command: Example of running http-request
       x-direktiv:  
-        debug: true
         cmds:
         - action: http
           url: |-
@@ -188,56 +162,26 @@ paths:
           username: '{{ default "" .Username }}'
           password: '{{ default "" .Password }}'
           errorNo200: '{{ .Error200 }}'
+          debug: '{{ .Debug }}'
           data:
             kind: '{{ default "string" .Content.Kind }}'
             value: '{{ .Content.Value }}'
-        output: '{{ index . 0 | toJson }}'
       x-direktiv-errors:
         io.direktiv.command.error: Command execution failed
         io.direktiv.output.error: Template error for output generation of the service
         io.direktiv.ri.error: Can not create information object from request
       responses:
         200:
-         description: |-
-          Returns headers and content of the requested URL. If the response is JSON it will be returned as JSON. 
-          If it is not JSON the content is returned as base64 encoded string.
-         examples: 
-            greeting: 
-              code: 200
-              headers:
-                Content-Type:
-                - text/plain; charset=UTF-8
-              status: 200 OK
-              success: true
-         schema:
+          description: List of executed commands.
+          examples:
+            code: 200
+            headers:
+            - Access-Control-Allow-Origin: "*"
+            - Content-Type: text/html
+            result: KXx8T2JqZWN0LmR...
+            success: true 
+          schema:
             type: object
-            properties:
-              code:
-                type: integer
-                format: int64
-                description: http response code
-                example: 200
-              result:
-                type: string
-                example: { "json": "response" }
-                description: JSON or base64 content of the response
-              success:  
-                type: boolean
-                description: Indicates successful or unsuccessful execution of the request
-                example: true
-              status: 
-                type: string
-                example: 200 OK
-                description: test representation of status
-              headers:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                example:
-                  content-type: application/json
-                description: Key/Value map of response headers
         default:
           description: generic error response
           headers:

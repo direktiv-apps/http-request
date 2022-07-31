@@ -3,6 +3,7 @@ package operations
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,9 +11,8 @@ import (
 
 	"github.com/direktiv/apps/go/pkg/apps"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/strfmt"
 
-	"http-request/models"
+	"app/models"
 )
 
 const (
@@ -40,7 +40,7 @@ type accParams struct {
 }
 
 type accParamsTemplate struct {
-	PostBody
+	models.PostParamsBody
 	Commands    []interface{}
 	DirektivDir string
 }
@@ -51,8 +51,7 @@ type ctxInfo struct {
 }
 
 func PostDirektivHandle(params PostParams) middleware.Responder {
-	fmt.Printf("params in: %+v", params)
-	resp := &PostOKBody{}
+	var resp interface{}
 
 	var (
 		err  error
@@ -84,10 +83,15 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	}
 
 	ret, err = runCommand0(ctx, accParams, ri)
+
 	responses = append(responses, ret)
 
 	// if foreach returns an error there is no continue
-	cont = convertTemplateToBool("<no value>", accParams, true)
+	//
+	// default we do not continue
+	cont = convertTemplateToBool("<no value>", accParams, false)
+	// cont = convertTemplateToBool("<no value>", accParams, true)
+	//
 
 	if err != nil && !cont {
 
@@ -109,22 +113,12 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	paramsCollector = append(paramsCollector, ret)
 	accParams.Commands = paramsCollector
 
-	fmt.Printf("object going in output template: %+v\n", responses)
-
-	s, err := templateString(`{{ index . 0 | toJson }}`, responses)
+	responseBytes, err := json.Marshal(responses)
 	if err != nil {
 		return generateError(outErr, err)
 	}
-	fmt.Printf("object from output template: %+v\n", s)
-
-	responseBytes := []byte(s)
-
-	// validate
-	resp.UnmarshalBinary(responseBytes)
-	err = resp.Validate(strfmt.Default)
-
+	err = json.Unmarshal(responseBytes, &resp)
 	if err != nil {
-		fmt.Printf("error parsing output object: %+v\n", err)
 		return generateError(outErr, err)
 	}
 
@@ -138,7 +132,7 @@ func runCommand0(ctx context.Context,
 	ri.Logger().Infof("running http request")
 
 	at := accParamsTemplate{
-		params.Body,
+		*params.Body,
 		params.Commands,
 		params.DirektivDir,
 	}
@@ -148,7 +142,7 @@ func runCommand0(ctx context.Context,
 
 	type baseRequest struct {
 		url, method, user, password string
-		insecure, err200            bool
+		insecure, err200, debug     bool
 	}
 
 	baseInfo := func(paramsIn interface{}) (*baseRequest, error) {
@@ -183,6 +177,7 @@ func runCommand0(ctx context.Context,
 			password: password,
 			err200:   convertTemplateToBool(`{{ .Error200 }}`, paramsIn, true),
 			insecure: convertTemplateToBool(`<no value>`, paramsIn, false),
+			debug:    convertTemplateToBool(`{{ .Debug }}`, paramsIn, false),
 		}, nil
 
 	}
@@ -231,7 +226,7 @@ func runCommand0(ctx context.Context,
 	}
 
 	ri.Logger().Infof("requesting %v", br.url)
-	return doHttpRequest(br.method, br.url, br.user, br.password,
+	return doHttpRequest(br.debug, br.method, br.url, br.user, br.password,
 		headers, br.insecure, br.err200, data)
 
 }

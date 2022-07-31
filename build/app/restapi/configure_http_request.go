@@ -14,10 +14,10 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
-	"http-request/restapi/operations"
+	"app/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../app --name HTTPRequest --spec ../swagger.yaml --principal interface{}
+//go:generate swagger generate server --target ../../app --name HTTPRequest --spec ../../../swagger.yaml --template-dir /home/jensg/go/src/github.com/direktiv-apps/http-request/build/templates --principal interface{}
 
 func configureFlags(api *operations.HTTPRequestAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
