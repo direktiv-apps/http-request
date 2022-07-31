@@ -138,7 +138,7 @@ paths:
                   url: 'https://www.direktiv.io'
                   query:
                   - hello: world
-                  - yes: no
+                  - hello1: world1
         - title: POST Request
           content: |-
             - id: http-request
