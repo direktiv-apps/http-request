@@ -137,8 +137,8 @@ paths:
                   debug: true
                   url: 'https://www.direktiv.io'
                   query:
-                  - hello: world
-                  - hello1: world1
+                    hello: world
+                    hello1: world2
         - title: POST Request
           content: |-
             - id: http-request
@@ -147,10 +147,10 @@ paths:
                 function: http-request
                 input: 
                   url: 'https://www.direktiv.io'
-                  method: post
+                  method: POST
                   headers:
-                  - header1: value1
-                  - header2: value2
+                    header1: value1
+                    header2: value2
         - title: POST Request with file
           content: |-
             - id: http-request
@@ -159,7 +159,7 @@ paths:
                 function: http-request
                 input: 
                   url: 'https://www.direktiv.io'
-                  method: post
+                  method: POST
                   content:
                     kind: string
                     value: 'This is the payload'

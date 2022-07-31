@@ -225,15 +225,15 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - hello1: world1",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n        hello: world\n        hello1: world2",
             "title": "Basic"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      headers:\n      - header1: value1\n      - header2: value2",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      headers:\n        header1: value1\n        header2: value2",
             "title": "POST Request"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      content:\n        kind: string\n        value: 'This is the payload'",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        kind: string\n        value: 'This is the payload'",
             "title": "POST Request with file"
           },
           {
@@ -403,15 +403,15 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - hello1: world1",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n        hello: world\n        hello1: world2",
             "title": "Basic"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      headers:\n      - header1: value1\n      - header2: value2",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      headers:\n        header1: value1\n        header2: value2",
             "title": "POST Request"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: post\n      content:\n        kind: string\n        value: 'This is the payload'",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        kind: string\n        value: 'This is the payload'",
             "title": "POST Request with file"
           },
           {

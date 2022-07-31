@@ -11,8 +11,8 @@ states:
     input:
       debug: true
       query:
-      - hello: world
-      - hello1: world1
+        hello: world
+        hello1: world2
       url: https://www.direktiv.io
   transition: state1
 - id: state1
@@ -21,9 +21,9 @@ states:
     function: http-request
     input:
       headers:
-      - header1: value1
-      - header2: value2
-      method: post
+        header1: value1
+        header2: value2
+      method: POST
       url: https://www.direktiv.io
   transition: state2
 - id: state2
@@ -34,7 +34,7 @@ states:
       content:
         kind: string
         value: This is the payload
-      method: post
+      method: POST
       url: https://www.direktiv.io
   transition: state3
 - id: state3
