@@ -225,7 +225,7 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - yes: no",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - hello1: world1",
             "title": "Basic"
           },
           {
@@ -403,7 +403,7 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - yes: no",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n      - hello: world\n      - hello1: world1",
             "title": "Basic"
           },
           {
