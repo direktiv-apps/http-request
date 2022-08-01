@@ -180,7 +180,7 @@ paths:
           url: |-
             {{ .URL }}
             {{- if .Params }}?
-            {{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{- end }}
+            {{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}&{{ end }}{{- end }}
             {{- end }}
           method: '{{ default "get" .Method }}'
           runtime-headers: .Headers

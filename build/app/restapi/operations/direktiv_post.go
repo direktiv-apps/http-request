@@ -149,7 +149,7 @@ func runCommand0(ctx context.Context,
 
 		u, err := templateString(`{{ .URL }}
 {{- if .Params }}?
-{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{- end }}
+{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}&{{ end }}{{- end }}
 {{- end }}`, paramsIn)
 		if err != nil {
 			return nil, err

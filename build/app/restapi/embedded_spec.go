@@ -172,17 +172,15 @@ func init() {
               "type": "object"
             },
             "examples": {
-              "code": 200,
-              "headers": [
-                {
-                  "Access-Control-Allow-Origin": "*"
-                },
-                {
+              "plain": {
+                "code": 200,
+                "headers": {
+                  "Access-Control-Allow-Origin": "*",
                   "Content-Type": "text/html"
-                }
-              ],
-              "result": "KXx8T2JqZWN0LmR...",
-              "success": true
+                },
+                "result": "KXx8T2JqZWN0LmR...",
+                "success": true
+              }
             }
           },
           "default": {
@@ -213,7 +211,7 @@ func init() {
               "method": "{{ default \"get\" .Method }}",
               "password": "{{ default \"\" .Password }}",
               "runtime-headers": ".Headers",
-              "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{- end }}\n{{- end }}",
+              "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}\u0026{{ end }}{{- end }}\n{{- end }}",
               "username": "{{ default \"\" .Username }}"
             }
           ]
@@ -350,17 +348,15 @@ func init() {
               "type": "object"
             },
             "examples": {
-              "code": 200,
-              "headers": [
-                {
-                  "Access-Control-Allow-Origin": "*"
-                },
-                {
+              "plain": {
+                "code": 200,
+                "headers": {
+                  "Access-Control-Allow-Origin": "*",
                   "Content-Type": "text/html"
-                }
-              ],
-              "result": "KXx8T2JqZWN0LmR...",
-              "success": true
+                },
+                "result": "KXx8T2JqZWN0LmR...",
+                "success": true
+              }
             }
           },
           "default": {
@@ -391,7 +387,7 @@ func init() {
               "method": "{{ default \"get\" .Method }}",
               "password": "{{ default \"\" .Password }}",
               "runtime-headers": ".Headers",
-              "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{- end }}\n{{- end }}",
+              "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}\u0026{{ end }}{{- end }}\n{{- end }}",
               "username": "{{ default \"\" .Username }}"
             }
           ]
