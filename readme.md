@@ -50,6 +50,19 @@ functions:
         header1: value1
         header2: value2
 ```
+   #### POST Request with JSON
+```yaml
+- id: http-request
+  type: action
+  action:
+    function: http-request
+    input: 
+      url: 'https://www.direktiv.io'
+      method: POST
+      content:
+        hello: world  
+        my: data
+```
    #### POST Request with file
 ```yaml
 - id: http-request
@@ -147,6 +160,7 @@ functions:
  - string: Plain string payload, e.g. JSON
  - base64: Will be "converted" to binary and attached
  - file: File payload, e.g. instance or workflow variables
+ - json: Treat the value as JSON key/values
   
 
 
@@ -157,7 +171,7 @@ functions:
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| kind | string| `string` |  | `"string"`| Kind of data |  |
-| value | string| `string` |  | | Value depends on `kind` value. |  |
+| kind | string| `string` |  | `"json"`| Kind of data |  |
+| value | [interface{}](#interface)| `interface{}` |  | | Value depends on `kind` value. |  |
 
  

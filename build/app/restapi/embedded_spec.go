@@ -72,22 +72,23 @@ func init() {
               ],
               "properties": {
                 "content": {
-                  "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables",
+                  "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables\n - json: Treat the value as JSON key/values",
                   "type": "object",
                   "properties": {
                     "kind": {
                       "description": "Kind of data",
                       "type": "string",
-                      "default": "string",
+                      "default": "json",
                       "enum": [
                         "string",
                         "file",
-                        "base64"
+                        "base64",
+                        "json"
                       ]
                     },
                     "value": {
                       "description": "Value depends on ` + "`" + `kind` + "`" + ` value.",
-                      "type": "string"
+                      "type": "object"
                     }
                   },
                   "example": {
@@ -203,8 +204,8 @@ func init() {
             {
               "action": "http",
               "data": {
-                "kind": "{{ default \"string\" .Content.Kind }}",
-                "value": "{{ .Content.Value }}"
+                "kind": "{{ default \"json\" .Content.Kind }}",
+                "value": "{{- if eq (deref (default \"json\" .Content.Kind)) \"json\" }}\n{{- .Content.Value | toJson }}\n{{- else }}\n{{- .Content.Value }}\n{{- end }}"
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",
@@ -229,6 +230,10 @@ func init() {
           {
             "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      headers:\n        header1: value1\n        header2: value2",
             "title": "POST Request"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        hello: world  \n        my: data",
+            "title": "POST Request with JSON"
           },
           {
             "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        kind: string\n        value: 'This is the payload'",
@@ -379,8 +384,8 @@ func init() {
             {
               "action": "http",
               "data": {
-                "kind": "{{ default \"string\" .Content.Kind }}",
-                "value": "{{ .Content.Value }}"
+                "kind": "{{ default \"json\" .Content.Kind }}",
+                "value": "{{- if eq (deref (default \"json\" .Content.Kind)) \"json\" }}\n{{- .Content.Value | toJson }}\n{{- else }}\n{{- .Content.Value }}\n{{- end }}"
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",
@@ -405,6 +410,10 @@ func init() {
           {
             "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      headers:\n        header1: value1\n        header2: value2",
             "title": "POST Request"
+          },
+          {
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        hello: world  \n        my: data",
+            "title": "POST Request with JSON"
           },
           {
             "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        kind: string\n        value: 'This is the payload'",
@@ -541,22 +550,23 @@ func init() {
       "x-go-gen-location": "operations"
     },
     "postParamsBodyContent": {
-      "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables",
+      "description": "Defines the payload of the request. The ` + "`" + `kind` + "`" + ` value can have three different values: \n - string: Plain string payload, e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n - file: File payload, e.g. instance or workflow variables\n - json: Treat the value as JSON key/values",
       "type": "object",
       "properties": {
         "kind": {
           "description": "Kind of data",
           "type": "string",
-          "default": "string",
+          "default": "json",
           "enum": [
             "string",
             "file",
-            "base64"
+            "base64",
+            "json"
           ]
         },
         "value": {
           "description": "Value depends on ` + "`" + `kind` + "`" + ` value.",
-          "type": "string"
+          "type": "object"
         }
       },
       "x-go-gen-location": "operations",

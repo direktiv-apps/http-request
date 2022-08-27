@@ -105,11 +105,11 @@ paths:
                 properties:
                   kind:
                     type: string
-                    enum: ["string", "file", "base64"]
+                    enum: ["string", "file", "base64", "json"]
                     description: Kind of data
-                    default: string
+                    default: json
                   value:
-                    type: string
+                    type: object
                     description: Value depends on `kind` value.
                 example:
                   kind: string
@@ -119,6 +119,7 @@ paths:
                     - string: Plain string payload, e.g. JSON
                     - base64: Will be "converted" to binary and attached
                     - file: File payload, e.g. instance or workflow variables
+                    - json: Treat the value as JSON key/values
       # direktiv code generation is configured here
       x-direktiv-function: |-
         functions:
@@ -151,6 +152,18 @@ paths:
                   headers:
                     header1: value1
                     header2: value2
+        - title: POST Request with JSON
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io'
+                  method: POST
+                  content:
+                    hello: world  
+                    my: data
         - title: POST Request with file
           content: |-
             - id: http-request
@@ -189,8 +202,14 @@ paths:
           errorNo200: '{{ .Error200 }}'
           debug: '{{ .Debug }}'
           data:
-            kind: '{{ default "string" .Content.Kind }}'
-            value: '{{ .Content.Value }}'
+            kind: '{{ default "json" .Content.Kind }}'
+            value: '{{ .Content.Kind }}'
+            value: |-
+              {{- if eq (deref (default "json" .Content.Kind)) "json" }}
+              {{- .Content.Value | toJson }}
+              {{- else }}
+              {{- .Content.Value }}
+              {{- end }}
       x-direktiv-errors:
         io.direktiv.command.error: Command execution failed
         io.direktiv.output.error: Template error for output generation of the service

@@ -19,17 +19,18 @@ import (
 //  - string: Plain string payload, e.g. JSON
 //  - base64: Will be "converted" to binary and attached
 //  - file: File payload, e.g. instance or workflow variables
+//  - json: Treat the value as JSON key/values
 // Example: {"kind":"string","value":"This is the payload"}
 //
 // swagger:model postParamsBodyContent
 type PostParamsBodyContent struct {
 
 	// Kind of data
-	// Enum: [string file base64]
+	// Enum: [string file base64 json]
 	Kind *string `json:"kind,omitempty"`
 
 	// Value depends on `kind` value.
-	Value string `json:"value,omitempty"`
+	Value interface{} `json:"value,omitempty"`
 }
 
 // Validate validates this post params body content
@@ -50,7 +51,7 @@ var postParamsBodyContentTypeKindPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["string","file","base64"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["string","file","base64","json"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -68,6 +69,9 @@ const (
 
 	// PostParamsBodyContentKindBase64 captures enum value "base64"
 	PostParamsBodyContentKindBase64 string = "base64"
+
+	// PostParamsBodyContentKindJSON captures enum value "json"
+	PostParamsBodyContentKindJSON string = "json"
 )
 
 // prop value enum

@@ -5,6 +5,41 @@ Feature: Basic
 Background:
 
 
+Scenario: jsonattachment
+
+	Given url karate.properties['testURL']
+
+	And path '/'
+	And header Direktiv-ActionID = 'development'
+	And header Direktiv-TempDir = '/tmp'
+	And request
+	"""
+	{
+		"url": "https://www.direktiv.io",
+		"method": "POST",
+		"content": {
+			"kind": "json",
+        	"value": {
+				"hello": "world"
+			}
+		}
+	}
+	"""
+	When method POST
+	Then status 200
+	And match $ ==
+	"""
+	[
+	{
+		"code": 200,
+		"headers": #object,
+		"result": #notnull,
+		"status": "200 OK",
+		"success": true
+	}
+	]
+	"""
+
 Scenario: direktiv
 
 	Given url karate.properties['testURL']

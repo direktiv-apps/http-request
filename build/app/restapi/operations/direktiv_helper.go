@@ -61,6 +61,7 @@ func templateString(tmplIn string, data interface{}) (string, error) {
 		"deref":      deref,
 		"file64":     file64,
 	}).Parse(tmplIn)
+
 	if err != nil {
 		return "", err
 	}

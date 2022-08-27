@@ -197,12 +197,16 @@ func runCommand0(ctx context.Context,
 
 	attachData := func(paramsIn interface{}, ri *apps.RequestInfo) ([]byte, error) {
 
-		kind, err := templateString(`{{ default "string" .Content.Kind }}`, paramsIn)
+		kind, err := templateString(`{{ default "json" .Content.Kind }}`, paramsIn)
 		if err != nil {
 			return nil, err
 		}
 
-		d, err := templateString(`{{ .Content.Value }}`, paramsIn)
+		d, err := templateString(`{{- if eq (deref (default "json" .Content.Kind)) "json" }}
+{{- .Content.Value | toJson }}
+{{- else }}
+{{- .Content.Value }}
+{{- end }}`, paramsIn)
 		if err != nil {
 			return nil, err
 		}
@@ -217,13 +221,14 @@ func runCommand0(ctx context.Context,
 
 	}
 
-	if params.Body.Content != nil {
-		data, err = attachData(at, ri)
-		if err != nil {
-			ir[resultKey] = err.Error()
-			return ir, err
-		}
+	// TODO: fix
+	// if params.Body.Content != nil {
+	data, err = attachData(at, ri)
+	if err != nil {
+		ir[resultKey] = err.Error()
+		return ir, err
 	}
+	// }
 
 	ri.Logger().Infof("requesting %v", br.url)
 	return doHttpRequest(br.debug, br.method, br.url, br.user, br.password,
