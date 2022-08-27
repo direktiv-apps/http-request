@@ -197,12 +197,23 @@ func runCommand0(ctx context.Context,
 
 	attachData := func(paramsIn interface{}, ri *apps.RequestInfo) ([]byte, error) {
 
-		kind, err := templateString(`{{ default "json" .Content.Kind }}`, paramsIn)
+		fmt.Printf("IN %v\n", paramsIn)
+
+		kind, err := templateString(`{{- if .Content }}
+{{- default "json" .Content.Kind }}
+{{- end }}`, paramsIn)
 		if err != nil {
 			return nil, err
 		}
 
-		d, err := templateString(`<no value>`, paramsIn)
+		d, err := templateString(`{{- if .Content }}
+{{ $content := (default "" .Content.Value) }}
+{{- if eq (deref (default "json" .Content.Kind)) "json" }}
+{{- $content | toJson }}
+{{- else }}
+{{- $content }}
+{{- end }}
+{{- end }}`, paramsIn)
 		if err != nil {
 			return nil, err
 		}

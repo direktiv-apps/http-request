@@ -162,8 +162,9 @@ paths:
                   url: 'https://www.direktiv.io'
                   method: POST
                   content:
-                    hello: world  
-                    my: data
+                    value:
+                      hello: world  
+                      my: data
         - title: POST Request with file
           content: |-
             - id: http-request
@@ -202,12 +203,18 @@ paths:
           errorNo200: '{{ .Error200 }}'
           debug: '{{ .Debug }}'
           data:
-            kind: '{{ default "json" .Content.Kind }}'
+            kind: |-
+              {{- if .Content }}
+              {{- default "json" .Content.Kind }}
+              {{- end }}
             value: |-
+              {{- if .Content }}
+              {{ $content := (default "" .Content.Value) }}
               {{- if eq (deref (default "json" .Content.Kind)) "json" }}
-              {{- .Content.Value | toJson }}
+              {{- $content | toJson }}
               {{- else }}
-              {{- .Content.Value }}
+              {{- $content }}
+              {{- end }}
               {{- end }}
       x-direktiv-errors:
         io.direktiv.command.error: Command execution failed

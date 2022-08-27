@@ -204,7 +204,8 @@ func init() {
             {
               "action": "http",
               "data": {
-                "kind": "{{ default \"json\" .Content.Kind }}"
+                "kind": "{{- if .Content }}\n{{- default \"json\" .Content.Kind }}\n{{- end }}",
+                "value": "{{- if .Content }}\n{{ $content := (default \"\" .Content.Value) }}\n{{- if eq (deref (default \"json\" .Content.Kind)) \"json\" }}\n{{- $content | toJson }}\n{{- else }}\n{{- $content }}\n{{- end }}\n{{- end }}"
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",
@@ -383,7 +384,8 @@ func init() {
             {
               "action": "http",
               "data": {
-                "kind": "{{ default \"json\" .Content.Kind }}"
+                "kind": "{{- if .Content }}\n{{- default \"json\" .Content.Kind }}\n{{- end }}",
+                "value": "{{- if .Content }}\n{{ $content := (default \"\" .Content.Value) }}\n{{- if eq (deref (default \"json\" .Content.Kind)) \"json\" }}\n{{- $content | toJson }}\n{{- else }}\n{{- $content }}\n{{- end }}\n{{- end }}"
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",

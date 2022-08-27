@@ -60,8 +60,9 @@ functions:
       url: 'https://www.direktiv.io'
       method: POST
       content:
-        hello: world  
-        my: data
+        value:
+          hello: world  
+          my: data
 ```
    #### POST Request with file
 ```yaml
