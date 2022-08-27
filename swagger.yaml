@@ -203,7 +203,6 @@ paths:
           debug: '{{ .Debug }}'
           data:
             kind: '{{ default "json" .Content.Kind }}'
-            value: '{{ .Content.Kind }}'
             value: |-
               {{- if eq (deref (default "json" .Content.Kind)) "json" }}
               {{- .Content.Value | toJson }}

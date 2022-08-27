@@ -31,10 +31,10 @@ Scenario: jsonattachment
 	"""
 	[
 	{
-		"code": 200,
+		"code": 405,
 		"headers": #object,
 		"result": #notnull,
-		"status": "200 OK",
+		"status": "405 Method Not Allowed",
 		"success": true
 	}
 	]

@@ -202,11 +202,7 @@ func runCommand0(ctx context.Context,
 			return nil, err
 		}
 
-		d, err := templateString(`{{- if eq (deref (default "json" .Content.Kind)) "json" }}
-{{- .Content.Value | toJson }}
-{{- else }}
-{{- .Content.Value }}
-{{- end }}`, paramsIn)
+		d, err := templateString(`<no value>`, paramsIn)
 		if err != nil {
 			return nil, err
 		}
@@ -221,14 +217,11 @@ func runCommand0(ctx context.Context,
 
 	}
 
-	// TODO: fix
-	// if params.Body.Content != nil {
 	data, err = attachData(at, ri)
 	if err != nil {
 		ir[resultKey] = err.Error()
 		return ir, err
 	}
-	// }
 
 	ri.Logger().Infof("requesting %v", br.url)
 	return doHttpRequest(br.debug, br.method, br.url, br.user, br.password,
