@@ -5,7 +5,7 @@ Run http-request in Direktiv
 
 ---
 - #### Categories: unknown
-- #### Image: gcr.io/direktiv/apps/http-request 
+- #### Image: direktiv.azurecr.io/functions/http-request 
 - #### License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - #### Issue Tracking: https://github.com/direktiv-apps/http-request/issues
 - #### URL: https://github.com/direktiv-apps/http-request
@@ -21,7 +21,7 @@ Run http-request in Direktiv as a function
 ```yaml
 functions:
 - id: http-request
-  image: gcr.io/direktiv/apps/http-request:1.0
+  image: direktiv.azurecr.io/functions/http-request:1.0
   type: knative-workflow
 ```
    #### Basic

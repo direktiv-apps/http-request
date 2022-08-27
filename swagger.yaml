@@ -4,7 +4,7 @@ info:
   title: http-request
   version: "1.0"
   x-direktiv-meta:
-    container: gcr.io/direktiv/apps/http-request
+    container: direktiv.azurecr.io/functions/http-request
     maintainer: |-
       [direktiv.io](https://www.direktiv.io) 
     issues: https://github.com/direktiv-apps/http-request/issues
@@ -124,7 +124,7 @@ paths:
       x-direktiv-function: |-
         functions:
         - id: http-request
-          image: gcr.io/direktiv/apps/http-request:1.0
+          image: direktiv.azurecr.io/functions/http-request:1.0
           type: knative-workflow
       x-direktiv-examples:
         # ADD MORE EXAMPLES HERE
