@@ -137,7 +137,7 @@ paths:
                 input: 
                   debug: true
                   url: 'https://www.direktiv.io'
-                  query:
+                  params:
                     hello: world
                     hello1: world2
         - title: POST Request
