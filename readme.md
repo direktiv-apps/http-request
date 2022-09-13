@@ -4,8 +4,8 @@
 Run http-request in Direktiv
 
 ---
-- #### Categories: unknown
-- #### Image: direktiv.azurecr.io/functions/http-request 
+- #### Categories: network
+- #### Image: gcr.io/direktiv/functions/http-request 
 - #### License: [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - #### Issue Tracking: https://github.com/direktiv-apps/http-request/issues
 - #### URL: https://github.com/direktiv-apps/http-request
@@ -21,7 +21,7 @@ Run http-request in Direktiv as a function
 ```yaml
 functions:
 - id: http-request
-  image: direktiv.azurecr.io/functions/http-request:1.0
+  image: gcr.io/direktiv/functions/http-request:1.0
   type: knative-workflow
 ```
    #### Basic
@@ -33,7 +33,7 @@ functions:
     input: 
       debug: true
       url: 'https://www.direktiv.io'
-      query:
+      params:
         hello: world
         hello1: world2
 ```

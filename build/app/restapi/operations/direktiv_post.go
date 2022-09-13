@@ -197,8 +197,6 @@ func runCommand0(ctx context.Context,
 
 	attachData := func(paramsIn interface{}, ri *apps.RequestInfo) ([]byte, error) {
 
-		fmt.Printf("IN %v\n", paramsIn)
-
 		kind, err := templateString(`{{- if .Content }}
 {{- default "json" .Content.Kind }}
 {{- end }}`, paramsIn)

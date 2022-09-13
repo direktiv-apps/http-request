@@ -34,9 +34,9 @@ func init() {
     "version": "1.0",
     "x-direktiv-meta": {
       "categories": [
-        "unknown"
+        "network"
       ],
-      "container": "gcr.io/direktiv/apps/http-request",
+      "container": "gcr.io/direktiv/functions/http-request",
       "issues": "https://github.com/direktiv-apps/http-request/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
       "long-description": "Run http-request in Direktiv as a function",
@@ -224,7 +224,7 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n        hello: world\n        hello1: world2",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      params:\n        hello: world\n        hello1: world2",
             "title": "Basic"
           },
           {
@@ -232,7 +232,7 @@ func init() {
             "title": "POST Request"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        hello: world  \n        my: data",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        value:\n          hello: world  \n          my: data",
             "title": "POST Request with JSON"
           },
           {
@@ -244,7 +244,7 @@ func init() {
             "title": "Treat 404 as error"
           }
         ],
-        "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/apps/http-request:1.0\n  type: knative-workflow"
+        "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/functions/http-request:1.0\n  type: knative-workflow"
       },
       "delete": {
         "parameters": [
@@ -310,9 +310,9 @@ func init() {
     "version": "1.0",
     "x-direktiv-meta": {
       "categories": [
-        "unknown"
+        "network"
       ],
-      "container": "gcr.io/direktiv/apps/http-request",
+      "container": "gcr.io/direktiv/functions/http-request",
       "issues": "https://github.com/direktiv-apps/http-request/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
       "long-description": "Run http-request in Direktiv as a function",
@@ -404,7 +404,7 @@ func init() {
         },
         "x-direktiv-examples": [
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      query:\n        hello: world\n        hello1: world2",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      debug: true\n      url: 'https://www.direktiv.io'\n      params:\n        hello: world\n        hello1: world2",
             "title": "Basic"
           },
           {
@@ -412,7 +412,7 @@ func init() {
             "title": "POST Request"
           },
           {
-            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        hello: world  \n        my: data",
+            "content": "- id: http-request\n  type: action\n  action:\n    function: http-request\n    input: \n      url: 'https://www.direktiv.io'\n      method: POST\n      content:\n        value:\n          hello: world  \n          my: data",
             "title": "POST Request with JSON"
           },
           {
@@ -424,7 +424,7 @@ func init() {
             "title": "Treat 404 as error"
           }
         ],
-        "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/apps/http-request:1.0\n  type: knative-workflow"
+        "x-direktiv-function": "functions:\n- id: http-request\n  image: gcr.io/direktiv/functions/http-request:1.0\n  type: knative-workflow"
       },
       "delete": {
         "parameters": [

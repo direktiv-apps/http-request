@@ -2,7 +2,7 @@ url: ""
 functions:
 - type: knative-workflow
   id: http-request
-  image: gcr.io/direktiv/apps/http-request:test
+  image: gcr.io/direktiv/functions/http-request:test
 states:
 - id: state0
   type: action
@@ -10,7 +10,7 @@ states:
     function: http-request
     input:
       debug: true
-      query:
+      params:
         hello: world
         hello1: world2
       url: https://www.direktiv.io
@@ -32,12 +32,24 @@ states:
     function: http-request
     input:
       content:
-        kind: string
-        value: This is the payload
+        value:
+          hello: world
+          my: data
       method: POST
       url: https://www.direktiv.io
   transition: state3
 - id: state3
+  type: action
+  action:
+    function: http-request
+    input:
+      content:
+        kind: string
+        value: This is the payload
+      method: POST
+      url: https://www.direktiv.io
+  transition: state4
+- id: state4
   type: action
   catch:
   - error: '*'

@@ -4,13 +4,13 @@ info:
   title: http-request
   version: "1.0"
   x-direktiv-meta:
-    container: direktiv.azurecr.io/functions/http-request
+    container: gcr.io/direktiv/functions/http-request
     maintainer: |-
       [direktiv.io](https://www.direktiv.io) 
     issues: https://github.com/direktiv-apps/http-request/issues
     url: https://github.com/direktiv-apps/http-request  
     categories:
-    - unknown
+    - network
     license: |-
       [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
     long-description: >-
@@ -124,7 +124,7 @@ paths:
       x-direktiv-function: |-
         functions:
         - id: http-request
-          image: direktiv.azurecr.io/functions/http-request:1.0
+          image: gcr.io/direktiv/functions/http-request:1.0
           type: knative-workflow
       x-direktiv-examples:
         # ADD MORE EXAMPLES HERE

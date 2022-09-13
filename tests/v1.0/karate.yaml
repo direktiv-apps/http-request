@@ -2,7 +2,7 @@ url: ""
 functions:
 - type: knative-workflow
   id: karate
-  image: gcr.io/direktiv/apps/karate:1.0
+  image: gcr.io/direktiv/functions/karate:1.0
 states:
 - id: run-test
   type: action
