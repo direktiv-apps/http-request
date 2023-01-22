@@ -11,6 +11,8 @@ import (
 
 	"github.com/direktiv/apps/go/pkg/apps"
 	"github.com/go-openapi/runtime/middleware"
+	// custom function imports
+	// end
 
 	"app/models"
 )
@@ -51,6 +53,7 @@ type ctxInfo struct {
 }
 
 func PostDirektivHandle(params PostParams) middleware.Responder {
+	fmt.Printf("params in: %+v\n", params)
 	var resp interface{}
 
 	var (
@@ -81,7 +84,6 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 		nil,
 		ri.Dir(),
 	}
-
 	ret, err = runCommand0(ctx, accParams, ri)
 
 	responses = append(responses, ret)
@@ -119,6 +121,7 @@ func PostDirektivHandle(params PostParams) middleware.Responder {
 	}
 	err = json.Unmarshal(responseBytes, &resp)
 	if err != nil {
+		fmt.Printf("error parsing output template: %+v\n", err)
 		return generateError(outErr, err)
 	}
 
@@ -145,27 +148,27 @@ func runCommand0(ctx context.Context,
 		insecure, err200, debug     bool
 	}
 
-	baseInfo := func(paramsIn interface{}) (*baseRequest, error) {
+	baseInfo := func(paramsIn interface{}, dir string) (*baseRequest, error) {
 
 		u, err := templateString(`{{ .URL }}
 {{- if .Params }}?
 {{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}&{{ end }}{{- end }}
-{{- end }}`, paramsIn)
+{{- end }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
 		}
 
-		method, err := templateString(`{{ default "get" .Method }}`, paramsIn)
+		method, err := templateString(`{{ default "get" .Method }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
 		}
 
-		user, err := templateString(`{{ default "" .Username }}`, paramsIn)
+		user, err := templateString(`{{ default "" .Username }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
 		}
 
-		password, err := templateString(`{{ default "" .Password }}`, paramsIn)
+		password, err := templateString(`{{ default "" .Password }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
 		}
@@ -176,12 +179,12 @@ func runCommand0(ctx context.Context,
 			user:     user,
 			password: password,
 			err200:   convertTemplateToBool(`{{ .Error200 }}`, paramsIn, true),
-			insecure: convertTemplateToBool(`<no value>`, paramsIn, false),
+			insecure: convertTemplateToBool(`{{ .Insecure }}`, paramsIn, false),
 			debug:    convertTemplateToBool(`{{ .Debug }}`, paramsIn, false),
 		}, nil
 
 	}
-	br, err := baseInfo(at)
+	br, err := baseInfo(at, ri.Dir())
 	if err != nil {
 		ir[resultKey] = err.Error()
 		return ir, err
@@ -195,11 +198,11 @@ func runCommand0(ctx context.Context,
 
 	var data []byte
 
-	attachData := func(paramsIn interface{}, ri *apps.RequestInfo) ([]byte, error) {
+	attachData := func(paramsIn interface{}, ri *apps.RequestInfo, dir string) ([]byte, error) {
 
 		kind, err := templateString(`{{- if .Content }}
 {{- default "json" .Content.Kind }}
-{{- end }}`, paramsIn)
+{{- end }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
 		}
@@ -211,9 +214,13 @@ func runCommand0(ctx context.Context,
 {{- else }}
 {{- $content }}
 {{- end }}
-{{- end }}`, paramsIn)
+{{- end }}`, paramsIn, dir)
 		if err != nil {
 			return nil, err
+		}
+
+		if string(d) == "empty" {
+			return []byte("{}"), nil
 		}
 
 		if kind == "file" {
@@ -226,13 +233,21 @@ func runCommand0(ctx context.Context,
 
 	}
 
-	data, err = attachData(at, ri)
+	data, err = attachData(at, ri, ri.Dir())
 	if err != nil {
 		ir[resultKey] = err.Error()
 		return ir, err
 	}
 
-	ri.Logger().Infof("requesting %v", br.url)
+	if br.debug {
+		ri.Logger().Infof("Payload:")
+		ri.Logger().Infof(string(data))
+	}
+
+	if br.debug {
+		ri.Logger().Infof("requesting %v", br.url)
+	}
+
 	return doHttpRequest(br.debug, br.method, br.url, br.user, br.password,
 		headers, br.insecure, br.err200, data)
 

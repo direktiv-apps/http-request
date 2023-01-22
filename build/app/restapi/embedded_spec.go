@@ -209,13 +209,15 @@ func init() {
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",
+              "insecure": "{{ .Insecure }}",
               "method": "{{ default \"get\" .Method }}",
               "password": "{{ default \"\" .Password }}",
               "runtime-headers": ".Headers",
               "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}\u0026{{ end }}{{- end }}\n{{- end }}",
               "username": "{{ default \"\" .Username }}"
             }
-          ]
+          ],
+          "debug": true
         },
         "x-direktiv-errors": {
           "io.direktiv.command.error": "Command execution failed",
@@ -389,13 +391,15 @@ func init() {
               },
               "debug": "{{ .Debug }}",
               "errorNo200": "{{ .Error200 }}",
+              "insecure": "{{ .Insecure }}",
               "method": "{{ default \"get\" .Method }}",
               "password": "{{ default \"\" .Password }}",
               "runtime-headers": ".Headers",
               "url": "{{ .URL }}\n{{- if .Params }}?\n{{- range $i,$e := .Params }}{{ urlquery $i }}={{ urlquery $e }}{{ if $i }}\u0026{{ end }}{{- end }}\n{{- end }}",
               "username": "{{ default \"\" .Username }}"
             }
-          ]
+          ],
+          "debug": true
         },
         "x-direktiv-errors": {
           "io.direktiv.command.error": "Command execution failed",

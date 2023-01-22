@@ -188,7 +188,7 @@ paths:
                   error200: true
               catch:
               - error: "*"                  
-      x-direktiv:  
+      x-direktiv:
         cmds:
         - action: http
           url: |-
@@ -202,6 +202,7 @@ paths:
           password: '{{ default "" .Password }}'
           errorNo200: '{{ .Error200 }}'
           debug: '{{ .Debug }}'
+          insecure: '{{ .Insecure }}'
           data:
             kind: |-
               {{- if .Content }}
