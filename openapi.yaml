@@ -1,0 +1,232 @@
+openapi: 3.0.1
+info:
+  title: http-request
+  description: Run http-request in Direktiv
+  version: "1.0"
+  x-direktiv-meta:
+    container: gcr.io/direktiv/functions/http-request
+    maintainer: "[direktiv.io](https://www.direktiv.io) "
+    issues: https://github.com/direktiv-apps/http-request/issues
+    url: https://github.com/direktiv-apps/http-request
+    categories:
+    - network
+    license: "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)"
+    long-description: Run http-request in Direktiv as a function
+servers:
+- url: /
+paths:
+  /:
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              hello:
+                summary: hasss
+                description: shshshsh
+                value: |-
+                  jens: gerke
+                  hello: world
+            schema:
+              required:
+              - url
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: URL for the request.
+                  example: http://www.direktiv.io
+                method:
+                  type: string
+                  description: HTTP method. Defaults to GET.
+                  example: POST
+                  enum:
+                  - GET
+                  - HEAD
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                  - CONNECT
+                  - TRACE
+                  - PATCH
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: List of key/values send as headers with the request.
+                  example:
+                    myheader: value
+                params:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: List of key/values appended to URL as query parameters.
+                  example:
+                    query1: queryvalue
+                username:
+                  type: string
+                  description: "If username and password are set, it will be used\
+                    \ for basic authenitcation for the request."
+                  example: myuser
+                password:
+                  type: string
+                  description: "If username and password are set, it will be used\
+                    \ for basic authenitcation for the request."
+                  example: mypassword
+                insecure:
+                  type: boolean
+                  description: Skips the verification the server certificate chain
+                    and host name.
+                  example: true
+                error200:
+                  type: boolean
+                  description: If set to `true` responses with status above 299 will
+                    be treated as errors.
+                  example: true
+                debug:
+                  type: boolean
+                  description: Prints the full URL and headers to logs.
+                  example: true
+                content:
+                  type: object
+                  properties:
+                    kind:
+                      type: string
+                      description: Kind of data
+                      default: json
+                      enum:
+                      - string
+                      - file
+                      - base64
+                      - json
+                    value:
+                      type: object
+                      properties: {}
+                      description: Value depends on `kind` value.
+                  description: "Defines the payload of the request. The `kind` value\
+                    \ can have three different values: \n - string: Plain string payload,\
+                    \ e.g. JSON\n - base64: Will be \"converted\" to binary and attached\n\
+                    \ - file: File payload, e.g. instance or workflow variables\n\
+                    \ - json: Treat the value as JSON key/values"
+                  example:
+                    kind: string
+                    value: This is the payload
+        required: false
+      responses:
+        "200":
+          description: List of executed commands.
+          content:
+            application/json:
+              schema:
+                type: object
+            plain:
+              example:
+                code: 200
+                headers:
+                  Access-Control-Allow-Origin: '*'
+                  Content-Type: text/html
+                result: KXx8T2JqZWN0LmR...
+                success: true
+        default:
+          description: generic error response
+          headers:
+            Direktiv-ErrorMessage:
+              schema:
+                type: string
+            Direktiv-ErrorCode:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-direktiv-function: |-
+        functions:
+        - id: http-request
+          image: gcr.io/direktiv/functions/http-request:1.0
+          type: knative-workflow
+      x-direktiv-examples:
+        # ADD MORE EXAMPLES HERE
+        - title: Basic
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  debug: true
+                  url: 'https://www.direktiv.io'
+                  params:
+                    hello: world
+                    hello1: world2
+        - title: POST Request
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io'
+                  method: POST
+                  headers:
+                    header1: value1
+                    header2: value2
+        - title: POST Request with JSON
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io'
+                  method: POST
+                  content:
+                    value:
+                      hello: world  
+                      my: data
+        - title: POST Request with file
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io'
+                  method: POST
+                  content:
+                    kind: string
+                    value: 'This is the payload'
+        - title: Treat 404 as error
+          content: |-
+            - id: http-request
+              type: action
+              action:
+                function: http-request
+                input: 
+                  url: 'https://www.direktiv.io/doesnotexist'
+                  error200: true
+              catch:
+              - error: "*"                   
+      x-direktiv-errors:
+        io.direktiv.command.error: Command execution failed
+        io.direktiv.output.error: Template error for output generation of the service
+        io.direktiv.ri.error: Can not create information object from request
+components:
+  schemas:
+    direktivFile:
+      type: object
+      x-go-type:
+        type: DirektivFile
+        import:
+          package: github.com/direktiv/apps/go/pkg/apps
+    error:
+      required:
+      - errorCode
+      - errorMessage
+      type: object
+      properties:
+        errorCode:
+          type: string
+        errorMessage:
+          type: string
